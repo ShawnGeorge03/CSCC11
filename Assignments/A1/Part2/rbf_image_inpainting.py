@@ -37,18 +37,18 @@ def RBF_image_inpainting(image_name, fill_rgb, spacing, width, l2_coef, patch_si
     assert 1 <= spacing <= 9, f"spacing must be between 1 and 9. Got: {spacing}"
     assert 1 <= width <= 2 * spacing, f"width must be between 1 and {2 * spacing}. Got: {width}"
     assert 1 <= patch_size, f"patch_size must be at least 1. Got: {patch_size}"
-    
+
     CENTER_SPACING = spacing
     PATCH_SIZE = patch_size
     TOL = tolerance
-    
+
     fill_rgb = fill_rgb.astype(np.float) / 255
 
-    # Read Images 
+    # Read Images
     im = mpimg.imread(image_name)
     im = im.astype(np.float) / 255
     im_rec = im
-    
+
     # Iterate through image patches
     # i corresponds to left-to-right
     # j corresponds to up-to-down
@@ -69,24 +69,24 @@ def RBF_image_inpainting(image_name, fill_rgb, spacing, width, l2_coef, patch_si
             red_model = RBFRegression(centers=centers, widths=widths)
             green_model = RBFRegression(centers=centers, widths=widths)
             blue_model = RBFRegression(centers=centers, widths=widths)
-            
+
             # Grid of pixel coordinates helps to find the coordinates of pixels that we will fill in
             [XX,YY] = np.meshgrid(list(range(i,i+PATCH_SIZE+1)),list(range(j,j+PATCH_SIZE+1)))
             Pfill = np.array([XX.reshape(-1,order='F'), YY.reshape(-1,order='F')])
             patch_fill=im[j-1:j+PATCH_SIZE, i-1:i+PATCH_SIZE]
-            
+
             # Uses squared distance to find indcies to be filled
             ref = patch_fill - fill_rgb
             ref = np.power(ref,2)
             ref = np.sum(ref,2)
             index_fill = np.argwhere(ref<=TOL)
             idx_fill = np.sort(index_fill[:,1]*ref.shape[0]+index_fill[:,0])
-            
+
             # Grid of pixel coordinates helps to find the coordinates of pixels that we will use to train the RBF models
             [XX,YY] = np.meshgrid(list(range(i-CENTER_SPACING,i+PATCH_SIZE+CENTER_SPACING+1)),
                                   list(range(j-CENTER_SPACING,j+PATCH_SIZE+CENTER_SPACING+1)))
             P = np.array([XX.reshape(-1,order='F'), YY.reshape(-1,order='F')])
-            
+
             patch=im[j-CENTER_SPACING-1:j+PATCH_SIZE+CENTER_SPACING, i-CENTER_SPACING-1:i+PATCH_SIZE+CENTER_SPACING]
 
             # Uses squared distance to find training data indicies
@@ -95,7 +95,7 @@ def RBF_image_inpainting(image_name, fill_rgb, spacing, width, l2_coef, patch_si
             ref = np.sum(ref,2)
             index_data = np.argwhere(ref>TOL)
             idx_data = np.sort(index_data[:,1]*ref.shape[0]+index_data[:,0])
-            
+
             # If there are pixels that need to be filled, then we try to train the models and fill.
             # Otherwise, we use the original patch
             if (idx_fill.size>0):
@@ -113,25 +113,25 @@ def RBF_image_inpainting(image_name, fill_rgb, spacing, width, l2_coef, patch_si
                     z_R = patch_R.reshape(patch_R.size,1, order='F')
                     z_R = z_R[idx_data]
                     red_model.fit_with_l2_regularization(PP.T, z_R, l2_coef)
-                    
+
                     #Green channel
                     patch_G=patch[:,:,1]
                     z_G = patch_G.reshape(patch_G.size,1, order='F')
                     z_G = z_G[idx_data]
                     green_model.fit_with_l2_regularization(PP.T, z_G, l2_coef)
-                    
+
                     #Blue channel
                     patch_B=patch[:,:,2]
                     z_B = patch_B.reshape(patch_B.size,1, order='F')
                     z_B = z_B[idx_data]
                     blue_model.fit_with_l2_regularization(PP.T, z_B, l2_coef)
-                    
+
                     # Reconstruct pixel values at fill-in locations
                     PP = Pfill[:,idx_fill].T
                     fill_R = red_model.predict(PP)
                     fill_G = green_model.predict(PP)
                     fill_B = blue_model.predict(PP)
-                    
+
                     # Assemble reconstructed patch
                     patch_rec=patch_fill
                     pr_R=patch_rec[:,:,0]
@@ -147,7 +147,7 @@ def RBF_image_inpainting(image_name, fill_rgb, spacing, width, l2_coef, patch_si
                 print('Copying patch at %d--%d\n'%(i,j))
                 patch_rec=patch_fill
             im_rec[j-1:j+PATCH_SIZE,i-1:i+PATCH_SIZE]=patch_rec
-        
+
     return np.round(im_rec,4)
 
 
@@ -161,7 +161,7 @@ if __name__ == "__main__":
     spacing = 3
     width = 2
     l2_coef = 0.5
-    
+
     im_rec = RBF_image_inpainting(image_name, fill_rgb, spacing, width, l2_coef)
 
     plt.imshow(im_rec)

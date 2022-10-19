@@ -1,0 +1,15 @@
+{
+    "recommendations": [
+        "mhutchie.git-graph",
+        "adpyke.codesnap",
+        "eamodio.gitlens",
+        "visualstudioexptteam.vscodeintellicode",
+        "visualstudioexptteam.intellicode-api-usage-examples",
+        "ms-toolsai.jupyter",
+        "ms-vsliveshare.vsliveshare-pack",
+        "analytic-signal.preview-pdf",
+        "ms-python.vscode-pylance",
+        "ms-python.python",
+        "shardulm94.trailing-spaces"
+    ]
+}

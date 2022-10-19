@@ -1,3 +1,5 @@
+__author__ = ["Shawn Santhoshgeorge (1006094673)", "Anaqi Amir Razif (1005813880)"]
+
 import numpy as np
 
 class RBFRegression():
@@ -9,7 +11,7 @@ class RBFRegression():
         - fit_with_l2_regularization(train_X, train_Y, l2_coef): ndarray, float -> None
 
         Args:
-        - centers (ndarray (Shape: (K, 2))): A Kx2 matrix corresponding to the 
+        - centers (ndarray (Shape: (K, 2))): A Kx2 matrix corresponding to the
                                            centers of the 2D radial basis functions.
                                            NOTE: This determines the number of parameters.
         - widths (ndarray (Shape: (K, 1))): A K-column vector corresponding to the
@@ -53,15 +55,15 @@ class RBFRegression():
         Recall that the RBF model is defined as:
 
         Given a single scalar input x,
-        f(x) = w_0 + w_1 * b_0(x) + w_2 * b_1(x) + ... + w_K * b_K(x), 
+        f(x) = w_0 + w_1 * b_0(x) + w_2 * b_1(x) + ... + w_K * b_K(x),
         where b_i is the i'th radial basis function.
 
         TODO: You will need to implement the above function and handle multiple 2D inputs,
               formatted as a Nx2 matrix.
-        
+
         NOTE: You must not iterate through inputs.
         HINT: You can use self._rbf_2d to compute b_i(X).
-        
+
         Args:
         - X (ndarray (Shape: (N, 2))): A Nx2 matrix consisting N 2D input data.
 
@@ -74,9 +76,9 @@ class RBFRegression():
 
         # ====================================================
         # TODO: Implement your solution within the box
-        
+
         # ====================================================
-    
+
     def fit_with_l2_regularization(self, train_X, train_Y, l2_coef):
         """ This method fits the model parameters, given the training inputs and outputs.
 
@@ -99,7 +101,7 @@ class RBFRegression():
 
         # ====================================================
         # TODO: Implement your solution within the box
-        
+
         # ====================================================
 
         assert self.parameters.shape == (self.K + 1, 1)
