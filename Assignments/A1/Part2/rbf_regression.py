@@ -77,6 +77,10 @@ class RBFRegression():
         # ====================================================
         # TODO: Implement your solution within the box
 
+        b_matrix = self.find_B_matrix_with_bias(X)
+
+        return b_matrix @ self.parameters
+
         # ====================================================
 
     def fit_with_l2_regularization(self, train_X, train_Y, l2_coef):
@@ -102,10 +106,28 @@ class RBFRegression():
         # ====================================================
         # TODO: Implement your solution within the box
 
+        b_matrix = self.find_B_matrix_with_bias(train_X)
+        self.parameters = (np.linalg.inv(np.matrix.transpose(b_matrix) @ b_matrix + l2_coef * np.eye(self.K + 1))) @ (np.matrix.transpose(b_matrix) @ train_Y)
         # ====================================================
 
         assert self.parameters.shape == (self.K + 1, 1)
 
+def find_B_matrix_with_bias(self, X):
+        """This method finds the B matrix with the bias and acts as a helper method for predict() and
+        fit_with_l2_regularization.
+
+        Args:
+        - X (ndarray (Shape: (N, 2))): A Nx2 matrix consisting N 2D input data.
+
+        Output:
+        - b_matrix (shape: (N, D)): A D-column vector consisting  scalar output data. 
+        """
+
+        b_matrix = np.ones((1,self.K + 1))
+        for i in range(self.K):
+            b_matrix = np.append(b_matrix, [self._rbf_2d(X, i).flatten()], axis = 0)
+
+        return b_matrix
 
 if __name__ == "__main__":
     # You can use linear regression to check whether your implementation is correct.
