@@ -50,6 +50,22 @@ class RBFRegression():
         z = np.exp(-X_diff / (2 * np.square(rbf_width)))
         return z
 
+    def _B_matrix_with_bias(self, X):
+        """This method finds the B matrix with the bias
+
+        Args:
+        - X (ndarray (Shape: (N, 2))): A Nx2 matrix consisting N 2D input data.
+
+        Output:
+        - B (ndarray (Shape: (N, K+1)): A (K+1)-column vector consisting basis vectors.
+        """
+
+        assert X.shape[1] == 2, f"Each input should contain two components. Got: {X.shape[1]}"
+
+        basis_col = np.ones((1, X.shape[0])).flatten()
+        rbf_cols = np.array([self._rbf_2d(X, k).flatten() for k in range(self.K)])
+        return np.column_stack((basis_col, *rbf_cols))
+
     def predict(self, X):
         """ This method predicts the output of the given input data using the model parameters.
         Recall that the RBF model is defined as:
@@ -77,9 +93,7 @@ class RBFRegression():
         # ====================================================
         # TODO: Implement your solution within the box
 
-        b_matrix = self.find_B_matrix_with_bias(X)
-
-        return b_matrix @ self.parameters
+        return self._B_matrix_with_bias(X) @ self.parameters
 
         # ====================================================
 
@@ -106,28 +120,15 @@ class RBFRegression():
         # ====================================================
         # TODO: Implement your solution within the box
 
-        b_matrix = self.find_B_matrix_with_bias(train_X)
-        self.parameters = (np.linalg.inv(np.matrix.transpose(b_matrix) @ b_matrix + l2_coef * np.eye(self.K + 1))) @ (np.matrix.transpose(b_matrix) @ train_Y)
+        B = self._B_matrix_with_bias(train_X)
+
+        p1 = np.linalg.pinv(np.matrix.transpose(B) @ B + l2_coef * np.identity(self.K + 1))
+        p2 = np.matrix.transpose(B) @ train_Y
+        self.parameters = p1 @ p2
+
         # ====================================================
 
         assert self.parameters.shape == (self.K + 1, 1)
-
-def find_B_matrix_with_bias(self, X):
-        """This method finds the B matrix with the bias and acts as a helper method for predict() and
-        fit_with_l2_regularization.
-
-        Args:
-        - X (ndarray (Shape: (N, 2))): A Nx2 matrix consisting N 2D input data.
-
-        Output:
-        - b_matrix (shape: (N, D)): A D-column vector consisting  scalar output data. 
-        """
-
-        b_matrix = np.ones((1,self.K + 1))
-        for i in range(self.K):
-            b_matrix = np.append(b_matrix, [self._rbf_2d(X, i).flatten()], axis = 0)
-
-        return b_matrix
 
 if __name__ == "__main__":
     # You can use linear regression to check whether your implementation is correct.
