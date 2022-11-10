@@ -1,13 +1,17 @@
+__author__ = ["Shawn Santhoshgeorge (1006094673)", "Anaqi Amir Razif (1005813880)"]
+
+import enum
+
 import numpy as np
+from pandas import DataFrame
 from sklearn.model_selection import train_test_split
 
-from enum import Enum
 
-class Mode(Enum):
+class Mode(enum.Enum):
     FREQ = 'Frequency'
     BINARY = 'Binary'
 
-def load_data(mode: Mode, train_size: float, test_size: float, random_state: int =2):
+def load_data(mode: Mode, train_size: float, test_size: float, random_state: int = 2) -> tuple:
     """
     Loads Data From BBC files
 
@@ -18,15 +22,12 @@ def load_data(mode: Mode, train_size: float, test_size: float, random_state: int
         random_state (int, optional): Controls the shuffling applied. Defaults to 2.
 
     Returns:
-        tuple: Split Data into Train and Test, Terms Used, and Labels
+        tuple: Train Subset, Test Subset, and Labels
     """
 
     assert train_size + test_size == 1, 'Train and Test Size must be 1'
 
     BBC_PATH = 'Assignments/A2/Part2/data/bbc'
-
-    with open(f'{BBC_PATH}.terms', 'r') as terms_file:
-        terms = {idx: term.strip() for idx, term in enumerate(terms_file)}
 
     with open(f'{BBC_PATH}.mtx', 'r') as articles_file:
         articles_file.readline()
@@ -52,4 +53,36 @@ def load_data(mode: Mode, train_size: float, test_size: float, random_state: int
     X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=train_size, \
         test_size=test_size, random_state=random_state)
 
-    return X_train, X_test, y_train, y_test, terms, labels
+    return X_train, y_train, X_test, y_test, labels
+
+def get_accuracy(labels: list[str], expected: np.ndarray, actual: np.ndarray) -> tuple:
+    """
+    Calculates the accuracy of each label and overall accuracy
+
+    Args:
+
+        labels (list[str]): Unique class labels
+        expected (np.ndarray (Shape: (N, 1))): Expected Labels
+        actual (np.ndarray (Shape: (N, 1))): Predicted Labels
+
+    Returns:
+        tuple: Label Accuracy, and Overall Accuracy
+    """
+
+
+    expected_flat = expected.flatten()
+    actual_flat = actual.flatten()
+
+    label_accuracy, total = [], 0
+
+    for label_idx, label in enumerate(labels):
+        expected_l = expected_flat[expected_flat == label_idx]
+        actual_l = actual_flat[expected_flat == label_idx]
+        count_l = np.count_nonzero(expected_l == actual_l)
+        label_accuracy.append((label, f'{round(count_l/len(expected_l) * 100, 2)} %' ))
+        total += count_l
+
+    label_acc = DataFrame(label_accuracy, columns=['Label','Label Accuracy'])
+    overall_acc = f'{round(total/len(expected_flat) * 100, 2)} %'
+
+    return label_acc, overall_acc
