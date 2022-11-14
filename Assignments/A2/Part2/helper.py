@@ -3,6 +3,7 @@ __author__ = ["Shawn Santhoshgeorge (1006094673)", "Anaqi Amir Razif (1005813880
 import enum
 
 import numpy as np
+from IPython.display import display_html
 from pandas import DataFrame
 from sklearn.model_selection import train_test_split
 
@@ -27,7 +28,7 @@ def load_data(mode: Mode, train_size: float, test_size: float, random_state: int
 
     assert train_size + test_size == 1, 'Train and Test Size must be 1'
 
-    BBC_PATH = 'Assignments/A2/Part2/data/bbc'
+    BBC_PATH = 'data/bbc'
 
     with open(f'{BBC_PATH}.mtx', 'r') as articles_file:
         articles_file.readline()
@@ -82,7 +83,46 @@ def get_accuracy(labels: list[str], expected: np.ndarray, actual: np.ndarray) ->
         label_accuracy.append((label, f'{round(count_l/len(expected_l) * 100, 2)} %' ))
         total += count_l
 
-    label_acc = DataFrame(label_accuracy, columns=['Label','Label Accuracy'])
+    label_acc = DataFrame(label_accuracy, columns=['Label','Accuracy'])
     overall_acc = f'{round(total/len(expected_flat) * 100, 2)} %'
 
     return label_acc, overall_acc
+
+def dataframe_to_html(df: DataFrame, caption: str) -> str:
+    """
+    Converts the DataFrame to Inline HTML for Jupyter Notebook
+
+    Args:
+        df (DataFrame): DataFrame to convert
+        caption (str): Short Description about the DataFrame
+
+    Returns:
+        str: Inline HTML for Jupyter Notebook
+    """
+
+    return df.style.set_table_attributes("style='display:inline;'") \
+		.set_properties(**{'text-align': 'left'}) \
+		.set_table_styles([dict(selector = 'th', props=[('text-align', 'left')])]) \
+		.set_caption(f'{caption} Accuracy').hide(axis='index')._repr_html_()
+
+def create_report(label_acc_train: DataFrame, label_acc_test: DataFrame, overall_acc_train: str, overall_acc_test: str) -> None:
+    """
+    Creates a Report for Training and Testing Accuracy Comparison
+
+    Args:
+        label_acc_train (DataFrame): Training Label Accuracy in percentage
+        label_acc_test (DataFrame): Testing Label Accuracy in percentage
+        overall_acc_train (str): Overall Training Accuracy in percentage
+        overall_acc_test (str): Overall Testing Accuracy in percentage
+    """
+
+    # Converts DataFrames to Inline HTML
+    train_df_html = dataframe_to_html(label_acc_train, 'Training')
+    test_df_html = dataframe_to_html(label_acc_test, 'Testing')
+
+    # Organizes the Tables and Text
+    df_html = f"<center>{train_df_html}{'&nbsp;'*5}{test_df_html}</center>\n\n"
+    acc_html = f"<center><p>Training Overall Accuracy: {overall_acc_train}</p><p>Testing Overall Accuracy: {overall_acc_test}</p></center>"
+
+    # Renders the raw HTML onto a Jupyter Notebook
+    display_html(df_html + acc_html, raw=True)
