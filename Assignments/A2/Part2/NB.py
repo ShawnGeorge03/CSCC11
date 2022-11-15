@@ -2,33 +2,29 @@ __author__ = ["Shawn Santhoshgeorge (1006094673)", "Anaqi Amir Razif (1005813880
 
 from helper import *
 
-class GCC:
+import numpy as np
+
+class NB:
     """
-    Creates a Gaussian Class Conditionals Classifier
+    Creates a Naive Bayes Classifier
     """
 
     def __init__(self) -> None:
         """
-        Initializes a Gaussian Class Conditionals Classifier
+        Initializes a Naive Bayes Classifier
         """
 
-        self.means = np.ndarray         # Means
-        self.vars = np.ndarray          # Variences
-        self.log_prob_l = np.ndarray    # Log of Class Priors
+        self.a = np.ndarray           # Likelihoods
+        self.b = np.ndarray           # Class Priors
 
-    def train(self, X: np.ndarray, y: np.ndarray, labels: list[str], var_bias: float = 1e-9) -> None:
+    def train(self, X: np.ndarray, y: np.ndarray, labels: list[str],) -> None:
         """
-        Calculates the Means, Variance and Log Class Priors for each Gaussians
+        Calculates the Model Likelihoods and Class Priors
 
         Args:
             X  (np.ndarray (Shape: (N, 9635))): A array consisting of each article with the usage of 9635 terms
             y  (np.ndarray (Shape: (N, 1))): A array consisting of the label index for the related article
             label (str[]): Classes for each unique y
-            var_bias (float, optional): Since each X_i is independent then the many of locations of the
-                                            matrix will be empty and to ensure no DivisonZero Error,
-                                            we add a small value to fill the zeros. The default choosen
-                                            by trial and error to ensure the testing accuracy was the highest.
-                                            Defaults to 1e-9
         """
 
         assert X.shape[0] == y.shape[0], f"Number of inputs and outputs are different. (X: {X.shape[0]}, y: {y.shape[0]})"
@@ -40,18 +36,33 @@ class GCC:
 
         self.N_l = len(labels)
 
-        self.means = np.zeros((self.N_l, N_f))
-        self.vars = np.zeros((self.N_l, N_f))
-        self.log_prob_l = np.zeros((self.N_l, ))
+        self.a = np.zeros((N_f, self.N_l ))
+        self.b = np.zeros((self.N_l, ))
 
         y_flat = y.flatten()
 
-        for l in range(self.N_l):
-            X_l = X[y_flat == l]
-            N_j, _ = X_l.shape
-            self.means[l] = np.mean(X_l, axis=0)          # Means
-            self.vars[l] = np.var(X_l, axis=0) + var_bias # Variances
-            self.log_prob_l[l] = np.log(N_j) - np.log(N)  # Log of Class Priors
+        for j in range(self.N_l):
+            N_j, _ = X[y_flat == j].shape
+            self.b[j] = N_j/N                                                   # Class Priors -> N_j/N
+            for i in range(N_f):
+                N_ij, _ = X[np.logical_and(X[:, i] == 1, y_flat == j)].shape    # Partitions the np.ndarray where the feature is used and is part of a certain label
+                self.a[i][j] = N_ij/N_j if N_ij != 0 else (N_ij + 1)/(N_j + 2)  # Likelihood -> N_ij/N_j
+
+    def __alpha(self, j: int, val: np.ndarray) -> float:
+        """
+        Calculates the alpha value for the jth class label with specific val
+
+        Args:
+            j (int): jth class label
+            val (np.ndarray (Shape: (9635, 1))): An array consisting of the usage of 9635 terms for the article
+
+        Returns:
+            float: alpha value for the jth class label with specific val
+        """
+
+        assert val.shape == (9635, ), f"val must be the correct shape of (9635, ). Got: {val.shape}"
+
+        return np.sum(np.log(self.a[:, j][val == 1])) + np.sum(np.log(1 - self.a[:, j][val == 0])) + self.b[j]
 
     def __predict_label(self, val: np.ndarray) -> int:
         """
@@ -66,14 +77,10 @@ class GCC:
 
         assert val.shape == (9635, ), f"val must be the correct shape of (9635, ). Got: {val.shape}"
 
-        preds = np.zeros((self.N_l, ))
+        alphas = np.array([self.__alpha(l, val) for l in range(self.N_l)])
+        gamma = np.min(alphas)
 
-        for l in range(self.N_l):
-            # Calculates using the log of the Normal Distribution
-            dist = np.power((val - self.means[l]), 2)/self.vars[l]
-            preds[l] = -0.5 * np.sum(np.log(2 * np.pi * self.vars[l]) + dist) + self.log_prob_l[l]
-
-        return np.argmax(preds)
+        return np.argmax(np.exp(alphas - gamma))
 
     def predict(self, X: np.ndarray) -> np.ndarray:
         """
