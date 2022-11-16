@@ -3,7 +3,7 @@ __author__ = ["Shawn Santhoshgeorge (1006094673)", "Anaqi Amir Razif (1005813880
 import enum
 
 import numpy as np
-from IPython.display import display_html
+from IPython.display import display_html, display, Math
 from pandas import DataFrame
 from sklearn.model_selection import train_test_split
 
@@ -84,7 +84,7 @@ def get_accuracy(labels: list[str], expected: np.ndarray, actual: np.ndarray) ->
         total += count_l
 
     label_acc = DataFrame(label_accuracy, columns=['Label','Accuracy'])
-    overall_acc = f'{round(total/len(expected_flat) * 100, 2)} %'
+    overall_acc = f'{round(total/len(expected_flat) * 100, 2)}'
 
     return label_acc, overall_acc
 
@@ -105,7 +105,7 @@ def dataframe_to_html(df: DataFrame, caption: str) -> str:
 		.set_table_styles([dict(selector = 'th', props=[('text-align', 'left')])]) \
 		.set_caption(f'{caption} Accuracy').hide(axis='index')._repr_html_()
 
-def create_report(label_acc_train: DataFrame, label_acc_test: DataFrame, overall_acc_train: str, overall_acc_test: str) -> None:
+def create_report(label_acc_train: DataFrame, label_acc_test: DataFrame, overall_acc_train: str, overall_acc_test: str, output: str = 'latex') -> None:
     """
     Creates a Report for Training and Testing Accuracy Comparison
 
@@ -114,15 +114,24 @@ def create_report(label_acc_train: DataFrame, label_acc_test: DataFrame, overall
         label_acc_test (DataFrame): Testing Label Accuracy in percentage
         overall_acc_train (str): Overall Training Accuracy in percentage
         overall_acc_test (str): Overall Testing Accuracy in percentage
+        output (str, Optional): Display HTML or Latex. Default 'latex'
     """
 
-    # Converts DataFrames to Inline HTML
-    train_df_html = dataframe_to_html(label_acc_train, 'Training')
-    test_df_html = dataframe_to_html(label_acc_test, 'Testing')
+    if output == 'html':
+        # Converts DataFrames to Inline HTML
+        train_df_html = dataframe_to_html(label_acc_train, 'Training')
+        test_df_html = dataframe_to_html(label_acc_test, 'Testing')
 
-    # Organizes the Tables and Text
-    df_html = f"<center>{train_df_html}{'&nbsp;'*5}{test_df_html}</center>\n\n"
-    acc_html = f"<center><p>Training Overall Accuracy: {overall_acc_train}</p><p>Testing Overall Accuracy: {overall_acc_test}</p></center>"
+        # Organizes the Tables and Text
+        df_html = f"<center>{train_df_html}{'&nbsp;'*5}{test_df_html}</center>\n\n"
+        acc_html = f"<center><p>Training Overall Accuracy: {overall_acc_train} %</p><p>Testing Overall Accuracy: {overall_acc_test} %</p></center>"
 
-    # Renders the raw HTML onto a Jupyter Notebook
-    display_html(df_html + acc_html, raw=True)
+        # Renders the raw HTML onto a Jupyter Notebook
+        display_html(df_html + acc_html, raw=True)
+    elif output == 'latex':
+        display(Math(r'\text{Training Accuracy:\ }'))
+        display(label_acc_train)
+        display(Math(r'\text{Testing Accuracy:\ }'))
+        display(label_acc_test)
+        display(Math(r'\text{Training Overall Accuracy:\ }' + overall_acc_train + r'\ \%'))
+        display(Math(r'\ \text{Testing Overall Accuracy:\ }' + overall_acc_test + r'\ \%'))
