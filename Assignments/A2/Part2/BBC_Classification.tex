@@ -414,7 +414,10 @@ Component}\label{part-2-programming-component}}
 \PY{k+kn}{from} \PY{n+nn}{GCC} \PY{k+kn}{import} \PY{n}{GCC}
 \PY{k+kn}{from} \PY{n+nn}{KNN} \PY{k+kn}{import} \PY{n}{KNN}
 
-\PY{n}{OUTPUT} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{latex}\PY{l+s+s1}{\PYZsq{}} \PY{c+c1}{\PYZsh{} or \PYZsq{}html\PYZsq{}}
+\PY{n}{OUTPUT} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{latex}\PY{l+s+s1}{\PYZsq{}} \PY{c+c1}{\PYZsh{} \PYZsq{}html\PYZsq{} or \PYZsq{}latex\PYZsq{} for create\PYZus{}report}
+
+\PY{n}{binary\PYZus{}data} \PY{o}{=} \PY{n}{load\PYZus{}data}\PY{p}{(}\PY{n}{mode}\PY{o}{=}\PY{n}{Mode}\PY{o}{.}\PY{n}{BINARY}\PY{p}{,} \PY{n}{train\PYZus{}size}\PY{o}{=}\PY{l+m+mf}{0.7}\PY{p}{,} \PY{n}{test\PYZus{}size}\PY{o}{=}\PY{l+m+mf}{0.3}\PY{p}{)}
+\PY{n}{freq\PYZus{}data} \PY{o}{=} \PY{n}{load\PYZus{}data}\PY{p}{(}\PY{n}{mode}\PY{o}{=}\PY{n}{Mode}\PY{o}{.}\PY{n}{FREQ}\PY{p}{,} \PY{n}{train\PYZus{}size}\PY{o}{=}\PY{l+m+mf}{0.7}\PY{p}{,} \PY{n}{test\PYZus{}size}\PY{o}{=}\PY{l+m+mf}{0.3}\PY{p}{)}
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -422,9 +425,9 @@ Component}\label{part-2-programming-component}}
 \subsubsection{Naive Bayes}\label{naive-bayes}}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{3}{\boxspacing}
+\prompt{In}{incolor}{2}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{labels} \PY{o}{=} \PY{n}{load\PYZus{}data}\PY{p}{(}\PY{n}{mode}\PY{o}{=}\PY{n}{Mode}\PY{o}{.}\PY{n}{BINARY}\PY{p}{,} \PY{n}{train\PYZus{}size}\PY{o}{=}\PY{l+m+mf}{0.7}\PY{p}{,} \PY{n}{test\PYZus{}size}\PY{o}{=}\PY{l+m+mf}{0.3}\PY{p}{)}
+\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{labels} \PY{o}{=} \PY{n}{binary\PYZus{}data}
 
 \PY{n}{n\PYZus{}b} \PY{o}{=} \PY{n}{NB}\PY{p}{(}\PY{p}{)}
 \PY{n}{n\PYZus{}b}\PY{o}{.}\PY{n}{train}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{labels}\PY{p}{)}
@@ -450,37 +453,38 @@ Component}\label{part-2-programming-component}}
             \hline
             Label & Accuracy\\
             \hline
-            business &   79.26 \% \\
+            business &   98.86 \% \\
        entertainment &   96.24 \% \\
-           politics  &   98.39 \% \\
-              sport  &   98.89 \% \\
-               tech  &   97.75 \%
+           politics  &   95.18 \% \\
+              sport  &   99.17 \% \\
+               tech  &   92.88 \%
          \end{tabular}
          \quad
         \begin{tabular}{cc}
             \hline
             Label & Accuracy\\
             \hline
-            business &   72.15 \% \\
-        entertainment &   96.67 \% \\
-           politics  &  100.0 \% \\
+            business &   97.47 \% \\
+        entertainment &  95.0 \% \\
+           politics  &   93.4 \% \\
               sport  &   98.67 \% \\
-               tech  &   97.01 \%
+               tech  &   82.84 \%
         \end{tabular}
     \end{center}
 
     \begin{center}
-        $\displaystyle \text{Training Overall Accuracy:\ }93.71\ \%$
-        $\displaystyle \ \text{Testing Overall Accuracy:\ }91.92\ \%$
+        $\displaystyle \text{Training Overall Accuracy:\ }96.72\ \%$
+        $\displaystyle \ \text{Testing Overall Accuracy:\ }93.71\ \%$
     \end{center}
     \hypertarget{gaussian-class-conditionals}{%
+\newpage
 \subsubsection{Gaussian Class
 Conditionals}\label{gaussian-class-conditionals}}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{2}{\boxspacing}
+\prompt{In}{incolor}{3}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{labels} \PY{o}{=} \PY{n}{load\PYZus{}data}\PY{p}{(}\PY{n}{mode}\PY{o}{=}\PY{n}{Mode}\PY{o}{.}\PY{n}{FREQ}\PY{p}{,} \PY{n}{train\PYZus{}size}\PY{o}{=}\PY{l+m+mf}{0.7}\PY{p}{,} \PY{n}{test\PYZus{}size}\PY{o}{=}\PY{l+m+mf}{0.3}\PY{p}{)}
+\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{labels} \PY{o}{=} \PY{n}{freq\PYZus{}data}
 
 \PY{n}{g\PYZus{}cc} \PY{o}{=} \PY{n}{GCC}\PY{p}{(}\PY{p}{)}
 \PY{n}{g\PYZus{}cc}\PY{o}{.}\PY{n}{train}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{labels}\PY{p}{)}
@@ -496,7 +500,6 @@ Conditionals}\label{gaussian-class-conditionals}}
 \PY{n}{create\PYZus{}report}\PY{p}{(}\PY{n}{label\PYZus{}acc\PYZus{}train}\PY{p}{,} \PY{n}{label\PYZus{}acc\PYZus{}test}\PY{p}{,} \PY{n}{overall\PYZus{}acc\PYZus{}train}\PY{p}{,} \PY{n}{overall\PYZus{}acc\PYZus{}test}\PY{p}{,} \PY{n}{output}\PY{o}{=}\PY{n}{OUTPUT}\PY{p}{)}
 \end{Verbatim}
 \end{tcolorbox}
-\newpage
     \begin{center}
         \text{Training Accuracy}
         \quad
@@ -518,11 +521,11 @@ Conditionals}\label{gaussian-class-conditionals}}
             \hline
             Label & Accuracy\\
             \hline
-            business &   85.44 \% \\
-        entertainment &  93.33 \% \\
-           politics  &   92.45 \% \\
-              sport  &   96.0  \% \\
-               tech  &   91.79 \%
+            business &   93.67 \% \\
+        entertainment &  90.83 \% \\
+           politics  &   87.74 \% \\
+              sport  &   95.33  \% \\
+               tech  &   90.3 \%
         \end{tabular}
     \end{center}
     \begin{center}
@@ -540,7 +543,7 @@ Conditionals}\label{gaussian-class-conditionals}}
         \PY{n}{display\PYZus{}html}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZlt{}center\PYZgt{} \PYZlt{}h3\PYZgt{} With }\PY{l+s+si}{\PYZob{}}\PY{n}{mode}\PY{o}{.}\PY{n}{value}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ Data \PYZlt{}/h3\PYZgt{} \PYZlt{}/center\PYZgt{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{raw}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
     \PY{k}{elif} \PY{n}{OUTPUT} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{latex}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:}
         \PY{n}{display}\PY{p}{(}\PY{n}{Math}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{text}\PY{l+s+s1}{\PYZob{}}\PY{l+s+s1}{With \PYZcb{}}\PY{l+s+s1}{\PYZsq{}} \PY{o}{+} \PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{text}\PY{l+s+s1}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}} \PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZob{}}\PY{n}{mode}\PY{o}{.}\PY{n}{value}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}} \PY{o}{+} \PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}} \PY{o}{+} \PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{text}\PY{l+s+s1}{\PYZob{}}\PY{l+s+s1}{ Data\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{)}
-    \PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{labels} \PY{o}{=} \PY{n}{load\PYZus{}data}\PY{p}{(}\PY{n}{mode}\PY{o}{=}\PY{n}{mode}\PY{p}{,} \PY{n}{train\PYZus{}size}\PY{o}{=}\PY{l+m+mf}{0.7}\PY{p}{,} \PY{n}{test\PYZus{}size}\PY{o}{=}\PY{l+m+mf}{0.3}\PY{p}{)}
+    \PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{labels} \PY{o}{=} \PY{n}{freq\PYZus{}data} \PY{k}{if} \PY{n}{mode}\PY{o}{.}\PY{n}{value} \PY{o}{==} \PY{n}{Mode}\PY{o}{.}\PY{n}{FREQ}\PY{o}{.}\PY{n}{value} \PY{k}{else} \PY{n}{binary\PYZus{}data}
     \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{]}\PY{p}{:}
         \PY{k}{if} \PY{n}{OUTPUT} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{html}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:}
             \PY{n}{display\PYZus{}html}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZlt{}h4\PYZgt{} For K = }\PY{l+s+si}{\PYZob{}}\PY{n}{k}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ \PYZlt{}/h4\PYZgt{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{raw}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
@@ -555,7 +558,7 @@ Conditionals}\label{gaussian-class-conditionals}}
         \PY{n}{y\PYZus{}pred\PYZus{}test} \PY{o}{=} \PY{n}{k\PYZus{}nn}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{)}
         \PY{n}{label\PYZus{}acc\PYZus{}test}\PY{p}{,} \PY{n}{overall\PYZus{}acc\PYZus{}test} \PY{o}{=} \PY{n}{get\PYZus{}accuracy}\PY{p}{(}\PY{n}{labels}\PY{p}{,} \PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}pred\PYZus{}test}\PY{p}{)}
 
-        \PY{n}{create\PYZus{}report}\PY{p}{(}\PY{n}{label\PYZus{}acc\PYZus{}train}\PY{p}{,} \PY{n}{label\PYZus{}acc\PYZus{}test}\PY{p}{,} \PY{n}{overall\PYZus{}acc\PYZus{}train}\PY{p}{,} \PY{n}{overall\PYZus{}acc\PYZus{}test}\PY{p}{)}
+        \PY{n}{create\PYZus{}report}\PY{p}{(}\PY{n}{label\PYZus{}acc\PYZus{}train}\PY{p}{,} \PY{n}{label\PYZus{}acc\PYZus{}test}\PY{p}{,} \PY{n}{overall\PYZus{}acc\PYZus{}train}\PY{p}{,} \PY{n}{overall\PYZus{}acc\PYZus{}test}\PY{p}{,} \PY{n}{output}\PY{o}{=}\PY{n}{OUTPUT}\PY{p}{)}
 \end{Verbatim}
 \end{tcolorbox}
     \begin{center}
@@ -608,7 +611,7 @@ Conditionals}\label{gaussian-class-conditionals}}
             \hline
             business &   82.1 \% \\
        entertainment &   71.43 \% \\
-           politics  &   71.38 \% \\
+           politics  &   71.06 \% \\
               sport  &   99.72 \% \\
                tech  &   74.53 \%
          \end{tabular}
@@ -617,19 +620,18 @@ Conditionals}\label{gaussian-class-conditionals}}
             \hline
             Label & Accuracy\\
             \hline
-            business &   69.62 \% \\
-        entertainment &  50.83 \% \\
+            business &   68.99 \% \\
+        entertainment &  50.0 \% \\
            politics  &   62.26 \% \\
               sport  &   100.0  \% \\
-               tech  &   45.52 \%
+               tech  &   46.27 \%
         \end{tabular}
     \end{center}
     \begin{center}
-        $\displaystyle \text{Training Overall Accuracy:\ }80.92\ \%$
-        $\displaystyle \ \text{Testing Overall Accuracy:\ }67.07\ \%$
+        $\displaystyle \text{Training Overall Accuracy:\ }80.86\ \%$
+        $\displaystyle \ \text{Testing Overall Accuracy:\ }66.92\ \%$
     \end{center}
-
-
+    \newpage
     $\displaystyle \text{For K = }6$
     \begin{center}
         \text{Training Accuracy}
@@ -641,9 +643,9 @@ Conditionals}\label{gaussian-class-conditionals}}
             \hline
             Label & Accuracy\\
             \hline
-            business &   69.32 \% \\
-       entertainment &   53.76 \% \\
-           politics  &   58.84 \% \\
+            business &   68.75 \% \\
+       entertainment &   50.75 \% \\
+           politics  &   56.91 \% \\
               sport  &   100.0 \% \\
                tech  &   43.45 \%
          \end{tabular}
@@ -653,18 +655,17 @@ Conditionals}\label{gaussian-class-conditionals}}
             Label & Accuracy\\
             \hline
             business &   56.96 \% \\
-        entertainment &  44.17 \% \\
-           politics  &   52.83 \% \\
+        entertainment &  45.0 \% \\
+           politics  &   51.89 \% \\
               sport  &   100.0  \% \\
-               tech  &   31.34 \%
+               tech  &   35.07 \%
         \end{tabular}
     \end{center}
     \begin{center}
-        $\displaystyle \text{Training Overall Accuracy:\ }67.24\ \%$
-        $\displaystyle \ \text{Testing Overall Accuracy:\ }58.53\ \%$
+        $\displaystyle \text{Training Overall Accuracy:\ }66.22\ \%$
+        $\displaystyle \ \text{Testing Overall Accuracy:\ }59.28\ \%$
     \end{center}
 
-    \newpage
     \begin{center}
         $\displaystyle \text{With }\text{Binary}\text{ Data}$
     \end{center}
@@ -691,16 +692,16 @@ Conditionals}\label{gaussian-class-conditionals}}
             \hline
             Label & Accuracy\\
             \hline
-            business &   39.24 \% \\
-        entertainment &  34.17 \% \\
-           politics  &   28.3 \% \\
-              sport  &   41.33  \% \\
-               tech  &   50.75 \%
+            business &   41.14 \% \\
+        entertainment &  28.33 \% \\
+           politics  &   42.45 \% \\
+              sport  &   99.33  \% \\
+               tech  &   30.6 \%
         \end{tabular}
     \end{center}
     \begin{center}
         $\displaystyle \text{Training Overall Accuracy:\ }100.0\ \%$
-        $\displaystyle \ \text{Testing Overall Accuracy:\ }39.37\ \%$
+        $\displaystyle \ \text{Testing Overall Accuracy:\ }50.0\ \%$
     \end{center}
 
     $\displaystyle \text{For K = }3$
@@ -714,27 +715,27 @@ Conditionals}\label{gaussian-class-conditionals}}
             \hline
             Label & Accuracy\\
             \hline
-            business &   78.12 \% \\
-       entertainment &   58.65 \% \\
-           politics  &   63.02 \% \\
-              sport  &   68.7 \% \\
-               tech  &   77.53 \%
+            business &   61.36 \% \\
+       entertainment &   43.61 \% \\
+           politics  &   52.41 \% \\
+              sport  &   100.0 \% \\
+               tech  &   43.07 \%
          \end{tabular}
          \quad
         \begin{tabular}{cc}
             \hline
             Label & Accuracy\\
             \hline
-            business &   49.37 \% \\
-        entertainment &  33.33 \% \\
-           politics  &   27.36 \% \\
-              sport  &   38.0  \% \\
-               tech  &   64.93 \%
+            business &   34.81 \% \\
+        entertainment &  14.17 \% \\
+           politics  &   38.68 \% \\
+              sport  &   100.0  \% \\
+               tech  &   11.19 \%
         \end{tabular}
     \end{center}
     \begin{center}
-        $\displaystyle \text{Training Overall Accuracy:\ }69.49\ \%$
-        $\displaystyle \ \text{Testing Overall Accuracy:\ }43.56\ \%$
+        $\displaystyle \text{Training Overall Accuracy:\ }62.36\ \%$
+        $\displaystyle \ \text{Testing Overall Accuracy:\ }41.62\ \%$
     \end{center}
 
     $\displaystyle \text{For K = }6$
@@ -748,29 +749,59 @@ Conditionals}\label{gaussian-class-conditionals}}
             \hline
             Label & Accuracy\\
             \hline
-            business &   77.27 \% \\
-       entertainment &   56.39 \% \\
-           politics  &   58.84 \% \\
-              sport  &   52.35 \% \\
-               tech  &   67.79 \%
+            business &   45.17 \% \\
+       entertainment &   24.44 \% \\
+           politics  &   32.8 \% \\
+              sport  &   100.0 \% \\
+               tech  &   11.61 \%
          \end{tabular}
          \quad
         \begin{tabular}{cc}
             \hline
             Label & Accuracy\\
             \hline
-            business &   63.29 \% \\
-        entertainment &  35.83 \% \\
-           politics  &   37.74 \% \\
-              sport  &   28.67  \% \\
-               tech  &   60.45 \%
+            business &   25.32 \% \\
+        entertainment &  13.33 \% \\
+           politics  &   25.47 \% \\
+              sport  &   100.0  \% \\
+               tech  &   5.22 \%
         \end{tabular}
     \end{center}
     \begin{center}
-        $\displaystyle \text{Training Overall Accuracy:\ }62.62\ \%$
-        $\displaystyle \ \text{Testing Overall Accuracy:\ }45.96\ \%$
+        $\displaystyle \text{Training Overall Accuracy:\ }46.11\ \%$
+        $\displaystyle \ \text{Testing Overall Accuracy:\ }35.93\ \%$
     \end{center}
+    \hypertarget{conclusion}{%
+\subsubsection{Conclusion}\label{conclusion}}
 
+\begin{center}
+    \begin{longtable}[]{@{}lll@{}}
+        \toprule
+        Model & Training & Testing\tabularnewline
+        \midrule
+        \endhead
+        Naive Bayes & 96.72 \% & 93.71 \%\tabularnewline
+        Gaussian Class Conditionals & 100.00 \% & 91.92 \%\tabularnewline
+        1-NN (Frequency Data) & 100.00 \% & 76.2 \%\tabularnewline
+        3-NN (Frequency Data) & 80.86 \% & 66.92 \%\tabularnewline
+        6-NN (Frequency Data) & 66.22 \% & 59.28 \%\tabularnewline
+        1-NN (Binary Data) & 100.00 \% & 50.00 \%\tabularnewline
+        3-NN (Binary Data) & 62.36 \% & 41.62 \%\tabularnewline
+        6-NN (Binary Data) & 46.11 \% & 35.93 \%\tabularnewline
+        \bottomrule
+    \end{longtable}
+    Overall Accuracy Sorted By Testing Data
+\end{center}
+
+From the above table we can see that the Naive Bayes performed quite
+well compared to all other models here and would recommend using Naive
+Bayes for predicting the article labels. Some other things to note is
+how the K-NN models have quite varying performance based on if the data
+provided is Frequency or Binary and seems to work well with Frequency
+Data. Between all the models we can see that was able to accurately
+provide the label for `sports' no matter if the data provided is
+Frequency or Binary, this could be becuase there are more of those
+articles in the dataset.
 
 
     % Add a bibliography block to the postdoc
